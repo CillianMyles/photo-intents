@@ -17,6 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name="com.example.cillian.photointents.PhotoProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:readPermission="com.onepagecrm.android.database.OnePageProvider.READ"
+            android:writePermission="com.onepagecrm.android.database.OnePageProvider.WRITE">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

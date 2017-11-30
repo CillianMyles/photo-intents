@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -26,9 +27,11 @@ import java.util.Locale;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private final static int PHOTO_REQUEST_CODE = 0;
 
-    private String mCurrentPhotoPath;
+    private String mPhotoPath;
 
     private TextView mPhotoUrlTv;
 
@@ -64,8 +67,14 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created.
             if (lPhotoFile != null) {
-                Uri lPhotoUri = FileProvider.getUriForFile(MainActivity.this,
-                        "com.example.cillian.photointents", lPhotoFile); // TODO: authority
+                Uri lPhotoUri = PhotoProvider.getUriForFile(
+                        MainActivity.this,
+                        PhotoProvider.AUTHORITY, // TODO: verify
+                        lPhotoFile
+                );
+                Log.e(TAG, "mPhotoPath: " + mPhotoPath); // TODO: delete
+                Log.e(TAG, "lPhotoUri: " + lPhotoUri); // TODO: delete
+                Log.e(TAG, "int files (before): " + Arrays.toString(fileList())); // TODO: delete
                 lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, lPhotoUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
             }
@@ -90,8 +99,22 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = lImage.getAbsolutePath();
+        mPhotoPath = lImage.getAbsolutePath();
         return lImage;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "requestCode: " + requestCode); // TODO: delete
+        Log.e(TAG, "resultCode: " + resultCode); // TODO: delete
+        Log.e(TAG, "data: " + data); // TODO: delete
+        Log.e(TAG, "uri: " + data.getData()); // TODO: delete
+        Log.e(TAG, "int files (after): " + Arrays.toString(fileList())); // TODO: delete
+        if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
+            final Uri lUri = data.getData();
+            mPhotoUrlTv.setText(lUri != null ? lUri.toString() : ".....");
+        }
     }
 
     @Override
