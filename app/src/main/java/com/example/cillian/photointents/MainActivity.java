@@ -114,6 +114,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
             final Uri lUri = data.getData();
             mPhotoUrlTv.setText(lUri != null ? lUri.toString() : ".....");
+            File lImageFile = new File(mPhotoPath);
+            if (lImageFile.exists()) {
+                Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
+                Log.e(TAG, "path (reg): " + lImageFile.getPath()); // TODO: delete
+                Log.e(TAG, "path (abs): " + lImageFile.getAbsolutePath()); // TODO: delete
+                Log.e(TAG, "size (bytes): " + lImageFile.length()); // TODO: delete
+            }
         }
     }
 
