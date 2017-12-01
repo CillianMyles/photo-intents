@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int PHOTO_REQUEST_CODE = 0;
 
-    private String mPhotoPath;
-
     private TextView mPhotoUrlTv;
+    private ImageView mPhotoThumbnail;
+
+    private String mPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(lToolbar);
 
         mPhotoUrlTv = findViewById(R.id.photo_uri);
+        mPhotoThumbnail = findViewById(R.id.photo_thumb);
 
         FloatingActionButton lFab = findViewById(R.id.fab);
         lFab.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "uri: " + data.getData()); // TODO: delete
         Log.e(TAG, "int files (after): " + Arrays.toString(fileList())); // TODO: delete
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
-            final Uri lUri = data.getData();
+            final Uri lUri = Uri.parse("file://" + mPhotoPath);
             mPhotoUrlTv.setText(lUri != null ? lUri.toString() : ".....");
+            mPhotoThumbnail.setImageURI(lUri);
             File lImageFile = new File(mPhotoPath);
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
