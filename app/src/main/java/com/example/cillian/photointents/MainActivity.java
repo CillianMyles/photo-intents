@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             Intent lIntent = new Intent(Intent.ACTION_VIEW);
             lIntent.setDataAndType(Uri.parse(lPhotoUri), "image/jpeg");
             if (lIntent.resolveActivity(getPackageManager()) != null) {
-                Log.e(TAG, "lIntent: " + lIntent);
+                Log.e(TAG, "intent: " + lIntent);
                 lIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(lIntent);
             } else {
@@ -106,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
                         lPhotoFile
                 );
 
-                Log.e(TAG, "mAbsolutePath: " + mAbsolutePath); // TODO: delete
-                Log.e(TAG, "mFileUri: " + mFileUri); // TODO: delete
-                Log.e(TAG, "mContentUri: " + mContentUri); // TODO: delete
-                Log.e(TAG, "int files (before): " + Arrays.toString(fileList())); // TODO: delete
-
                 lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mContentUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
+
+                Log.e(TAG, "absolute path: " + mAbsolutePath); // TODO: delete
+                Log.e(TAG, "file uri: " + mFileUri); // TODO: delete
+                Log.e(TAG, "content uri: " + mContentUri); // TODO: delete
+                Log.e(TAG, "internal files (before): " + Arrays.toString(fileList())); // TODO: delete
             }
         } else {
             Toast.makeText(MainActivity.this,
@@ -143,12 +143,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e(TAG, "requestCode: " + requestCode); // TODO: delete
-        Log.e(TAG, "resultCode: " + resultCode); // TODO: delete
-        Log.e(TAG, "data: " + data); // TODO: delete
-        Log.e(TAG, "uri: " + data.getData()); // TODO: delete
-        Log.e(TAG, "int files (after): " + Arrays.toString(fileList())); // TODO: delete
-
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
 
             // Can use file or content uri.
@@ -161,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
             File lImageFile = new File(mAbsolutePath);
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
-                Log.e(TAG, "path (reg): " + lImageFile.getPath()); // TODO: delete
-                Log.e(TAG, "path (abs): " + lImageFile.getAbsolutePath()); // TODO: delete
+                Log.e(TAG, "path: " + lImageFile.getAbsolutePath()); // TODO: delete
                 Log.e(TAG, "size (bytes): " + lImageFile.length()); // TODO: delete
+                Log.e(TAG, "internal files (after): " + Arrays.toString(fileList())); // TODO: delete
             }
         }
     }
