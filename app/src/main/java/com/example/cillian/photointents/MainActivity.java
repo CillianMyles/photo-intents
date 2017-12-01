@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,8 +49,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar lToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(lToolbar);
 
-        mPhotoUrlTv = findViewById(R.id.photo_uri);
         mPhotoThumbnail = findViewById(R.id.photo_thumb);
+
+        mPhotoUrlTv = findViewById(R.id.photo_uri);
+        mPhotoUrlTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open with external app.
+                openImageWithExternalApp();
+            }
+        });
 
         FloatingActionButton lFab = findViewById(R.id.fab);
         lFab.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +68,23 @@ public class MainActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
+    }
+
+    private void openImageWithExternalApp() {
+        final String lPhotoUri = mPhotoUrlTv.getText().toString();
+        if (!TextUtils.isEmpty(lPhotoUri)) {
+            Intent lIntent = new Intent(Intent.ACTION_VIEW);
+            lIntent.setDataAndType(Uri.parse(lPhotoUri), "image/jpeg");
+            if (lIntent.resolveActivity(getPackageManager()) != null) {
+                Log.e(TAG, "lIntent: " + lIntent);
+                lIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(lIntent);
+            } else {
+                Toast.makeText(MainActivity.this,
+                        "Please ensure you have an application to view images.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void launchCamera() {
