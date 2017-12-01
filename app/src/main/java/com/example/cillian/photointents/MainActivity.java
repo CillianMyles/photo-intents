@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         File lImage = File.createTempFile(
                 lFileName,   /* prefix */
                 lSuffix,     /* suffix */
-                lInternalDir /* directory */
+                lExternalDir /* directory */
         );
 
         // Save a file: path for use with ACTION_VIEW intents
