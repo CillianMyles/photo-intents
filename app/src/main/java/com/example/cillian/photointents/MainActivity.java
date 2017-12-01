@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mPhotoUrlTv;
     private ImageView mPhotoThumbnail;
 
-    private String mPhotoPath;
+    private String mPhotoAbsolutePath;
+    private Uri mPhotoContentUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +71,15 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created.
             if (lPhotoFile != null) {
-                Uri lPhotoUri = PhotoProvider.getUriForFile(
+                mPhotoContentUri = PhotoProvider.getUriForFile(
                         MainActivity.this,
                         PhotoProvider.AUTHORITY, // TODO: verify
                         lPhotoFile
                 );
-                Log.e(TAG, "mPhotoPath: " + mPhotoPath); // TODO: delete
-                Log.e(TAG, "lPhotoUri: " + lPhotoUri); // TODO: delete
+                Log.e(TAG, "mPhotoAbsolutePath: " + mPhotoAbsolutePath); // TODO: delete
+                Log.e(TAG, "mPhotoContentUri: " + mPhotoContentUri); // TODO: delete
                 Log.e(TAG, "int files (before): " + Arrays.toString(fileList())); // TODO: delete
-                lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, lPhotoUri);
+                lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoContentUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
             }
         } else {
@@ -102,23 +103,28 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mPhotoPath = lImage.getAbsolutePath();
+        mPhotoAbsolutePath = lImage.getAbsolutePath();
         return lImage;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         Log.e(TAG, "requestCode: " + requestCode); // TODO: delete
         Log.e(TAG, "resultCode: " + resultCode); // TODO: delete
         Log.e(TAG, "data: " + data); // TODO: delete
         Log.e(TAG, "uri: " + data.getData()); // TODO: delete
         Log.e(TAG, "int files (after): " + Arrays.toString(fileList())); // TODO: delete
+
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
-            final Uri lUri = Uri.parse("file://" + mPhotoPath);
-            mPhotoUrlTv.setText(lUri != null ? lUri.toString() : ".....");
+
+            final Uri lUri = Uri.parse("file://" + mPhotoAbsolutePath);
+            //final Uri lUri = mPhotoContentUri;
+            mPhotoUrlTv.setText(lUri != null ? lUri.toString() : "ERROR");
             mPhotoThumbnail.setImageURI(lUri);
-            File lImageFile = new File(mPhotoPath);
+            File lImageFile = new File(mPhotoAbsolutePath);
+
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
                 Log.e(TAG, "path (reg): " + lImageFile.getPath()); // TODO: delete
