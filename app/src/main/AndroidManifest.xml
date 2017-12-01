@@ -21,9 +21,7 @@
             android:name="com.example.cillian.photointents.PhotoProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            android:readPermission="com.onepagecrm.android.database.OnePageProvider.READ"
-            android:writePermission="com.onepagecrm.android.database.OnePageProvider.WRITE">
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths"/>
