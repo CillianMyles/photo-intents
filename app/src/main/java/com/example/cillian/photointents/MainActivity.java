@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mPhotoUrlTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Open with external app.
+                // Open taken image with external app if possible.
                 openImageWithExternalApp();
             }
         });
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         lFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Launch camera.
+                // Launch camera to capture image.
                 launchCamera();
             }
         });
@@ -72,11 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void openImageWithExternalApp() {
         final String lPhotoUri = mPhotoUrlTv.getText().toString();
+        // Only if photo uri populated in view (implies photo taken).
         if (!TextUtils.isEmpty(lPhotoUri)) {
             Intent lIntent = new Intent(Intent.ACTION_VIEW);
+            // We know it's an image: "image/jpeg".
             lIntent.setDataAndType(Uri.parse(lPhotoUri), "image/jpeg");
             if (lIntent.resolveActivity(getPackageManager()) != null) {
                 Log.e(TAG, "intent: " + lIntent);
+                // Grant temp read permission to the content URI (to external app).
                 lIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(lIntent);
             } else {
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         PhotoProvider.AUTHORITY,
                         lPhotoFile
                 );
-
+                // Tell the camera where to save the data of the photo.
                 lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mContentUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
 
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
+        // Create an image file name.
         final String lTimeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
         final String lFileName = "IMG_" + lTimeStamp + "_";
         final String lSuffix = ".jpg";
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 lExternalDir /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
+        // Save a file: path for use with ACTION_VIEW intents.
         mAbsolutePath = lImage.getAbsolutePath();
         return lImage;
     }
@@ -145,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
-
             // Can use file or content uri.
             //final Uri lUri = mFileUri;
             final Uri lUri = mContentUri;
@@ -153,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
             mPhotoUrlTv.setText(lUri != null ? lUri.toString() : "ERROR");
             mPhotoThumbnail.setImageURI(lUri);
 
+            // Since we know the exact location of the file, we can print some info about it.
             File lImageFile = new File(mAbsolutePath);
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName());
