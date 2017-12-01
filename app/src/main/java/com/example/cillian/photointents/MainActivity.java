@@ -102,17 +102,17 @@ public class MainActivity extends AppCompatActivity {
                 mFileUri = Uri.parse("file://" + mAbsolutePath);
                 mContentUri = PhotoProvider.getUriForFile(
                         MainActivity.this,
-                        PhotoProvider.AUTHORITY, // TODO: verify
+                        PhotoProvider.AUTHORITY,
                         lPhotoFile
                 );
 
                 lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mContentUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
 
-                Log.e(TAG, "absolute path: " + mAbsolutePath); // TODO: delete
-                Log.e(TAG, "file uri: " + mFileUri); // TODO: delete
-                Log.e(TAG, "content uri: " + mContentUri); // TODO: delete
-                Log.e(TAG, "internal files (before): " + Arrays.toString(fileList())); // TODO: delete
+                Log.e(TAG, "absolute path: " + mAbsolutePath);
+                Log.e(TAG, "file uri: " + mFileUri);
+                Log.e(TAG, "content uri: " + mContentUri);
+                Log.e(TAG, "internal files (before): " + Arrays.toString(fileList()));
             }
         } else {
             Toast.makeText(MainActivity.this,
@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         final String lFileName = "IMG_" + lTimeStamp + "_";
         final String lSuffix = ".jpg";
         File lExternalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // TODO: request WRITE EXT permission - can manually give permission in app settings to test!
         File lInternalDir = getFilesDir();
         File lImage = File.createTempFile(
                 lFileName,   /* prefix */
@@ -154,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
 
             File lImageFile = new File(mAbsolutePath);
             if (lImageFile.exists()) {
-                Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
-                Log.e(TAG, "path: " + lImageFile.getAbsolutePath()); // TODO: delete
-                Log.e(TAG, "size (bytes): " + lImageFile.length()); // TODO: delete
-                Log.e(TAG, "internal files (after): " + Arrays.toString(fileList())); // TODO: delete
+                Log.e(TAG, "name: " + lImageFile.getName());
+                Log.e(TAG, "path: " + lImageFile.getAbsolutePath());
+                Log.e(TAG, "size (bytes): " + lImageFile.length());
+                Log.e(TAG, "internal files (after): " + Arrays.toString(fileList()));
             }
         }
     }

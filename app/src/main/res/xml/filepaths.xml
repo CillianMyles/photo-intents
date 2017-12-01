@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path name="images" path="images/"/>
-    <files-path name="files" path="/"/>
-    <external-files-path name="images" path="images/"/>
-    <external-files-path name="files" path="/"/>
+    <files-path name="int-images" path="images/"/>
+    <files-path name="int-files" path="/"/>
+    <external-files-path name="ext-images" path="images/"/>
+    <external-files-path name="ext-files" path="/"/>
 </paths>
