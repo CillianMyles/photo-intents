@@ -26,6 +26,7 @@ import java.util.Locale;
 /**
  * @author Cillian Myles <mylsey4thewin@gmail.com> on 30/11/2017.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -35,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mPhotoUrlTv;
     private ImageView mPhotoThumbnail;
 
-    private String mPhotoAbsolutePath;
-    private Uri mPhotoContentUri;
+    private String mAbsolutePath;
+    private Uri mFileUri;
+    private Uri mContentUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +73,19 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created.
             if (lPhotoFile != null) {
-                mPhotoContentUri = PhotoProvider.getUriForFile(
+                mFileUri = Uri.parse("file://" + mAbsolutePath);
+                mContentUri = PhotoProvider.getUriForFile(
                         MainActivity.this,
                         PhotoProvider.AUTHORITY, // TODO: verify
                         lPhotoFile
                 );
-                Log.e(TAG, "mPhotoAbsolutePath: " + mPhotoAbsolutePath); // TODO: delete
-                Log.e(TAG, "mPhotoContentUri: " + mPhotoContentUri); // TODO: delete
+
+                Log.e(TAG, "mAbsolutePath: " + mAbsolutePath); // TODO: delete
+                Log.e(TAG, "mFileUri: " + mFileUri); // TODO: delete
+                Log.e(TAG, "mContentUri: " + mContentUri); // TODO: delete
                 Log.e(TAG, "int files (before): " + Arrays.toString(fileList())); // TODO: delete
-                lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoContentUri);
+
+                lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mContentUri);
                 startActivityForResult(lTakePictureIntent, PHOTO_REQUEST_CODE);
             }
         } else {
@@ -103,11 +109,10 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mPhotoAbsolutePath = lImage.getAbsolutePath();
+        mAbsolutePath = lImage.getAbsolutePath();
         return lImage;
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -121,14 +126,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
 
             // Can use file or content uri.
-            final Uri lFileUri = Uri.parse("file://" + mPhotoAbsolutePath);
-            final Uri lContentUri = mPhotoContentUri;
-            final Uri lUri = lContentUri;
+            //final Uri lUri = mFileUri;
+            final Uri lUri = mContentUri;
 
             mPhotoUrlTv.setText(lUri != null ? lUri.toString() : "ERROR");
             mPhotoThumbnail.setImageURI(lUri);
 
-            File lImageFile = new File(mPhotoAbsolutePath);
+            File lImageFile = new File(mAbsolutePath);
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
                 Log.e(TAG, "path (reg): " + lImageFile.getPath()); // TODO: delete
