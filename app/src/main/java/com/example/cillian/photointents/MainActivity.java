@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         return lImage;
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -119,12 +120,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == PHOTO_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            final Uri lUri = Uri.parse("file://" + mPhotoAbsolutePath);
-            //final Uri lUri = mPhotoContentUri;
+            // Can use file or content uri.
+            final Uri lFileUri = Uri.parse("file://" + mPhotoAbsolutePath);
+            final Uri lContentUri = mPhotoContentUri;
+            final Uri lUri = lContentUri;
+
             mPhotoUrlTv.setText(lUri != null ? lUri.toString() : "ERROR");
             mPhotoThumbnail.setImageURI(lUri);
-            File lImageFile = new File(mPhotoAbsolutePath);
 
+            File lImageFile = new File(mPhotoAbsolutePath);
             if (lImageFile.exists()) {
                 Log.e(TAG, "name: " + lImageFile.getName()); // TODO: delete
                 Log.e(TAG, "path (reg): " + lImageFile.getPath()); // TODO: delete
